@@ -18,22 +18,31 @@
         :collapse="isCollapse"
         @select="handleSelect"
       >
-        <el-menu-item index="all">
-          <el-icon><Collection /></el-icon>
-          <span>全部知识库</span>
-        </el-menu-item>
-        <el-menu-item index="recent">
-          <el-icon><Clock /></el-icon>
-          <span>最近更新</span>
-        </el-menu-item>
-        <el-menu-item index="tags">
-          <el-icon><PriceTag /></el-icon>
-          <span>标签</span>
-        </el-menu-item>
-        <el-menu-item index="explore" disabled>
-          <el-icon><Compass /></el-icon>
-          <span>探索</span>
-        </el-menu-item>
+        <template
+          v-for="item in menuItems"
+          :key="item.index"
+        >
+          <template v-if="item?.children">
+            <el-sub-menu :index="item.index">
+              <template #title>
+                <el-icon><component :is="item.icon" /></el-icon>
+                <span>{{ item.label }}</span>
+              </template>
+              <el-menu-item
+                v-for="child in item.children"
+                :key="child.index"
+                :index="child.index"
+              >
+                <el-icon><component :is="child.icon" /></el-icon>
+                <span>{{ child.label }}</span>
+              </el-menu-item>
+            </el-sub-menu>
+          </template>
+          <el-menu-item v-else :index="item.index">
+            <el-icon><component :is="item.icon" /></el-icon>
+            <span>{{ item.label }}</span>
+          </el-menu-item>
+        </template>
       </el-menu>
 
       <el-button class="create-btn" type="primary" round>
@@ -54,13 +63,24 @@ import {
   Collection,
   Compass,
 } from '@element-plus/icons-vue'
+import type { menuItem } from '@/types/menu'
+import { useRouter } from 'vue-router'
 
 const keyword = ref('')
-const active = ref('all')
+const active = ref('home')
 const isCollapse = ref(false)
 
+const menuItems: menuItem[] = [
+  { index: 'home', icon: Collection, label: '全部知识库' },
+  { index: 'recent', icon: Clock, label: '最近更新' },
+  { index: 'tags', icon: PriceTag, label: '标签' },
+  { index: 'explore', icon: Compass, label: '探索' },
+]
+
+const router = useRouter()
 const handleSelect = (key: string) => {
   active.value = key
+  router.push('/'+key)
 }
 </script>
 

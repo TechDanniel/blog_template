@@ -33,11 +33,15 @@
           </div>
 
           <div class="card-list">
-            <Card
+            <a
               v-for="kb in knowledgeBases"
               :key="kb.id"
-              v-bind="kb"
-            />
+              :href="kb.docLink"
+              target="_blank"
+              rel="noreferrer"
+            >
+              <Card v-bind="kb" />
+            </a>
           </div>
         </el-main>
       </el-container>
@@ -53,38 +57,7 @@ import Card from '@/components/Card.vue'
 import FloatingParticles from '@/components/FloatingParticles.vue'
 import Header from '@/components/layout/Header.vue'
 import Sidebar from '@/components/layout/Sidebar.vue'
-
-
-// 模拟数据
-const knowledgeBases = [
-    {
-      id: 1,
-      name: '前端开发指南',
-      description: 'React、Vue、TypeScript 等前端技术栈学习资料',
-      category: '技术',
-      lastUpdated: '2小时前',
-      icon: '🌟',
-      color: 'from-blue-400 to-cyan-400'
-    },
-    {
-      id: 2,
-      name: '产品设计规范',
-      description: 'UI/UX 设计原则、组件库和设计系统',
-      category: '设计',
-      lastUpdated: '5小时前',
-      icon: '🎨',
-      color: 'from-purple-400 to-pink-400'
-    },
-    {
-      id: 3,
-      name: '项目管理手册',
-      description: '敏捷开发、团队协作和项目管理最佳实践',
-      category: '管理',
-      lastUpdated: '1天前',
-      icon: '📋',
-      color: 'from-green-400 to-emerald-400'
-    },
-  ];
+import { knowledgeBases } from '@/config/knowledgeBaseCard'
 
 </script>
 

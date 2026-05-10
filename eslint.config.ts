@@ -36,4 +36,12 @@ export default defineConfig([
       "vue/multi-word-component-names": "off",
     },
   },
+
+  {
+    files: ["**/*.{ts,tsx,vue}"],
+    rules: {
+      "@typescript-eslint/no-explicit-any": "off",
+      "@typescript-eslint/no-unused-vars": "off",
+    },
+  },
 ]);

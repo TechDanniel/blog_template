@@ -1,22 +1,35 @@
 <template>
    <el-form 
-    :ref="formRef" 
+    ref="formRef" 
     :model="form"
+    :rules="rules"
   >
-    <!-- 邮箱 -->
-    <el-form-item prop="email">
+    <!-- 用户名 -->
+    <el-form-item required prop="username">
       <el-input
-        v-model="form.email"
-        placeholder="your@email.com"
+        v-model="form.username"
+        placeholder="用户名"
         size="default"
         clearable
       >
-        <template #prefix><Mail class="input-icon" /></template>
+        <template #prefix><User class="input-icon" /></template>
+      </el-input>
+    </el-form-item>
+
+    <!-- 昵称 -->
+    <el-form-item required prop="nickname">
+      <el-input
+        v-model="form.nickname"
+        placeholder="昵称"
+        size="default"
+        clearable
+      >
+        <template #prefix><User class="input-icon" /></template>
       </el-input>
     </el-form-item>
 
     <!-- 密码 -->
-    <el-form-item prop="password">
+    <el-form-item required prop="password">
       <el-input
         v-model="form.password"
         placeholder="••••••••"
@@ -54,20 +67,47 @@
 import {
  ArrowRight
 } from '@element-plus/icons-vue'
-import { ref } from 'vue'
+import type { FormInstance, FormRules } from 'element-plus'
+import { reactive, ref } from 'vue'
 
-const formRef = ref(null)
+const formRef = ref<FormInstance>()
 const form = ref({
-  email: '',
+  username: '',
+  nickname: '',
   password: ''
+})
+
+const passwordValidator = (rule: any, value: string, callback: any) => {
+  if (!value) {
+    callback(new Error('请输入密码'))
+  } 
+  const passwordRegex = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d).{8,}$/
+  if (!passwordRegex.test(value)) {
+    callback(new Error('密码必须至少8位，包含大小写字母和数字'))
+  } else {
+    callback()
+  }
+}
+
+const rules = reactive<FormRules<typeof form>>({
+  password:[
+    {
+      validator: passwordValidator,
+      trigger: 'blur'
+    }
+  ]
 })
 
 const rememberMe = ref(false)
 const emit = defineEmits(['login'])
 
 const handleLogin = () => {
-  // 这里可以添加表单验证逻辑
-  emit('login')
+  if(!formRef.value) return
+  formRef.value.validate((valid: boolean) => {
+    if (valid) {
+      emit('login', form.value)
+    }
+  })
 }
 </script>
 

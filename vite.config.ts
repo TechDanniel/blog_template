@@ -30,5 +30,15 @@ export default defineConfig({
     },
     // 自动识别后缀
     extensions: ['.mjs', '.js', '.ts', '.jsx', '.tsx', '.json', '.vue']
-  }
+  },
+  // 服务器配置
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8000',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ''),
+      },
+    },
+  },
 })

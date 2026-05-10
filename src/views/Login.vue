@@ -88,6 +88,7 @@
 
 <script setup>
 import { computed, ref } from 'vue'
+import { useRouter } from 'vue-router'
 import {
    Moon, Sunny
 } from '@element-plus/icons-vue'
@@ -95,10 +96,11 @@ import FloatingParticles from '@/components/FloatingParticles.vue'
 import CharacterAvatar from '@/components/CharacterAvatar.vue'
 import { useThemeStore } from '@/store/useTheme'
 import LoginForm from '@/components/LoginForm.vue'
-
-const emit = defineEmits(['login'])
+import { login } from '@/http/modules/index'
+import { ElMessage } from 'element-plus'
 
 const themeStore = useThemeStore()
+const router = useRouter()
 const isDark = computed({
   get:() => {
     return themeStore.isDark
@@ -110,8 +112,17 @@ const isDark = computed({
 
 const showForm = ref(false)
 
-const handleLogin = () => {
-  emit('login')
+const handleLogin = async (data) => {
+  try{
+    const response = await login(data)
+    if(response.code === 200){
+      // 登录成功，跳转到主页
+      router.push('/home')
+      ElMessage.success('登录成功！')
+    }
+  } catch (error) {
+    console.error('Login failed:', error)
+  }
 }
 </script>
 
