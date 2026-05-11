@@ -74,7 +74,7 @@ const menuItems: menuItem[] = [
   { index: 'home', icon: Collection, label: '全部知识库' },
   { index: 'recent', icon: Clock, label: '最近更新' },
   { index: 'tags', icon: PriceTag, label: '标签' },
-  { index: 'explore', icon: Compass, label: '探索' },
+  { index: 'aiChat', icon: Compass, label: '探索' },
 ]
 
 const router = useRouter()

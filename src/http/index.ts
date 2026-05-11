@@ -15,6 +15,7 @@ import {
   requestMap,
   refreshToken,
 } from '@/utils/http';
+import { router } from '@/router';
 
 const http = axios.create({
   baseURL: import.meta.env.VITE_APP_BASE_URL,
@@ -57,21 +58,6 @@ const onResponseFulfilled = async (response: HttpResponse): Promise<responseData
       }
     }
 
-    // 跳过 401 刷新 token 逻辑
-    if(data.code === 401 && config.meta?.skipAuthRefresh){
-      window.location.href = '/login';
-      return Promise.reject(new Error('未授权，请重新登录'));
-    }
-
-    if(data.code === 401){
-      await refreshToken();
-      config.meta = {
-        ...config.meta,
-        skipAuthRefresh: true, // 避免刷新后code又是401导致死循环
-      }
-      return http(config);
-    }
-
     if(config.meta?.tip){
       if(data.code !== 200){
         // 错误提示
@@ -83,9 +69,12 @@ const onResponseFulfilled = async (response: HttpResponse): Promise<responseData
     return response.data;
 };
 
-const onResponseRejected = (error: any) => {
+const onResponseRejected = async (error: any) => {
+  const { data } = error.response || {};
+  const config = error.config as HttpInternalRequestConfig;
+
   // abort请求进入onResponseRejected，删除请求标识
-  if (error?.config?.meta?.deduplication) {
+  if (config?.meta?.deduplication) {
     const config = error.config as HttpInternalRequestConfig;
     const requestKey = (config as any)[DEDUPE_KEY_PROP] ?? getRequestKey(config);
     const controller = (config as any)[DEDUPE_CONTROLLER_PROP] as AbortController | undefined;
@@ -93,6 +82,27 @@ const onResponseRejected = (error: any) => {
       requestMap.delete(requestKey);
     }
   }
+
+    // 跳过 401 刷新 token 逻辑
+    if(data.code === 401 && config.meta?.skipAuthRefresh){
+      router.push('/login')
+      return Promise.reject(new Error('未授权，请重新登录'));
+    }
+
+    if(data.code === 401){
+      try {
+        await refreshToken();
+      } catch (err) {
+        return Promise.reject('刷新token失败');
+      }
+
+      config.meta = {
+        ...config.meta,
+        skipAuthRefresh: true, // 避免刷新后code又是401导致死循环
+      }
+      return http(config);
+    }
+
   return Promise.reject(error);
 };
 

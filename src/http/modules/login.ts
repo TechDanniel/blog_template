@@ -9,3 +9,8 @@ export const login = (data: any) => {
 export const getUserInfo = () => {
   return Get('/user/profile');
 }
+
+// 刷新access token
+export const handleRefreshToken = () => {
+  return Post('/user/refreshToken', undefined, { meta: { skipAuthRefresh: true } });
+}

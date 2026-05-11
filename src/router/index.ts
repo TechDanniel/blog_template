@@ -1,26 +1,34 @@
 import { getUserInfo } from '@/http/modules/login';
 import { ElMessage } from 'element-plus';
-import { createRouter, createWebHistory } from 'vue-router'
+import { createRouter, createWebHashHistory } from 'vue-router'
 
 const routes = [
-  {
-    path: '/',
-    redirect: '/home',
-  },
-  {
-    path: '/home',
-    name: 'Home',
-    component: () => import('@/views/Home.vue')
-  },
   {
     path: '/login',
     name: 'Login',
     component: () => import('@/views/Login.vue')
   },
+  {
+    path: '/',
+    component: () => import('@/components/layout/Container.vue'),
+    redirect: '/home',
+    children: [
+      {
+        path: '/home',
+        name: 'Home',
+        component: () => import('@/views/Home.vue')
+      },
+      {
+        path:'/aiChat',
+        name:'AIChat',
+        component: () => import('@/views/AIChat.vue')
+      }
+    ]
+  },
 ]
 
 export const router = createRouter({
-  history: createWebHistory(),
+  history: createWebHashHistory(), // 使用 hash 模式
   routes,
 })
 

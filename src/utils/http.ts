@@ -1,4 +1,4 @@
-import http from '@/http/index';
+import { handleRefreshToken } from '@/http/modules/login';
 import type{ HttpInternalRequestConfig } from '@/types/http';
 export const requestMap = new Map<string, AbortController>();
 
@@ -33,13 +33,12 @@ export async function refreshToken(){
 
   refreshTokenPromise = (async () => {
     try{
-      const response = await http.post('/refresh-token', undefined, { meta: { skipAuthRefresh: true } });
+      const response = await handleRefreshToken();
       if(response.code !== 200){
-        window.location.href = '/login';
         throw new Error(response?.message || '刷新 token 失败');
       }
     }catch(error){
-      window.location.href = '/login';
+      console.error('刷新 token 失败:', error);
       throw error;
     }
   })().finally(() => {

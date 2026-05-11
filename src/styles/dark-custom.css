@@ -56,4 +56,22 @@
   --login-text-primary: #f1f5f9;
   --login-text-foreground: #94a3b8;
   --login-primary: #60a5fa;
+
+  /* ai聊天框 */
+  --bg-page: linear-gradient(to bottom right, #0f172a, #1e293b, #0f172a);
+  --bg-card: rgba(30, 41, 59, 0.7);
+  --bg-card-hover: rgba(30, 41, 59, 0.8);
+  --bg-header: linear-gradient(to right, rgba(37, 99, 235, 0.1), rgba(8, 145, 178, 0.1), rgba(5, 150, 105, 0.1));
+  --bg-message-bot: rgba(30, 41, 59, 0.7);
+
+  --border-color: rgba(255, 255, 255, 0.1);
+  --border-light: rgba(255, 255, 255, 0.1);
+
+  --text-title: #f8fafc;
+  --text-normal: #e2e8f0;
+  --text-desc: #94a3b8;
+
+  --shadow-sm: 0 4px 16px rgba(0, 0, 0, 0.2);
+  --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 8px 32px rgba(168, 85, 247, 0.3);
 }
